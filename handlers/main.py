@@ -12,7 +12,7 @@ class ExploreHandler(tornado.web.RequestHandler):
     Explore page, photo of other users.
     """
     def get(self, *args, **kwargs):
-        self.render('explore.html')
+        self.render('test.html')
 
 class PostHandler(tornado.web.RequestHandler):
     """

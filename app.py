@@ -26,7 +26,7 @@ class Application(tornado.web.Application):
 application = Application()
 
 if __name__ == '__main__':
-    tornado.options.parse_command_line()
+    tornado.options.parse_command_line()  #打印请求行信息
     application.listen(options.port)
     print("Server starts on port {}".format(str(options.port)))
     tornado.ioloop.IOLoop.current().start()  #current()也可以换成instance()

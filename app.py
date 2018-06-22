@@ -21,7 +21,8 @@ class Application(tornado.web.Application):
         ]
         settings = dict(
             debug=True,
-            template_path = os.path.join(os.path.dirname(__file__), 'templates')
+            template_path = os.path.join(os.path.dirname(__file__), 'templates'),
+            static_path = os.path.join(os.path.dirname(__file__),'static')
         )
         super(Application, self).__init__(handlers,**settings)  #**是将字典拆包
 

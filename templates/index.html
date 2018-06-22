@@ -2,4 +2,12 @@
 
 {% block title %}Index page{% end %}
 
-{% block content %}Index content Page{% end %}
+{% block content %}
+
+    {% for img in images %}
+    <img src="{{ img }}" width="600px" height="500px"/>
+
+    {% end %}
+
+
+{% end %}

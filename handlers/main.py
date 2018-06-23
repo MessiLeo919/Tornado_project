@@ -46,17 +46,15 @@ class UploadHandler(tornado.web.RequestHandler):
 
     def post(self, *args, **kwargs):
         img_files = self.request.files.get('newimg',None)  #得到的是列表
-        # print(img_files)
         for img_file in img_files:
-            # print(img_file)
             with open('./static/uploads/'+img_file['filename'],'wb') as f:
                 f.write(img_file['body'])
-                # print("img_file{}".format(img_file))
-            self.write({'got file': img_file['filename']})
+
 
             pic_path = os.path.join(self.settings.get('static_path'),'uploads/'+img_file['filename'])
-            print("pic_path----",pic_path)
 
             photo.make_thumb(pic_path)
+
+            self.write({'got file': img_file['filename']})
 
 

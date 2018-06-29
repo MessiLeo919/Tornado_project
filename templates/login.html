@@ -1,0 +1,21 @@
+{% extends base.html %}
+
+{% block title %}Login page{% end %}
+
+{% block content %}
+
+    <div>
+        <form action="/login" method="post" enctype="multipart/form-data">
+            <div class="form-group">
+                username <input type="text" name="username">
+            </div>
+            <div class="form-group">
+                password <input type="password"  name="password">
+            </div>
+            <button>Login</button>
+        </form>
+    </div>
+
+
+
+{% end %}

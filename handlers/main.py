@@ -1,12 +1,18 @@
 import tornado.web
 import os
+from pycket.session import SessionMixin
 
 from utils import photo
+
+class AuthBaseHandler(tornado.web.RequestHandler,SessionMixin):
+    def get_current_user(self):
+        return self.session.get('bayern_user_info')
 
 class IndexHandler(tornado.web.RequestHandler):
     """
     Home page for user, photo feeds
     """
+    @tornado.web.authenticated
     def get(self, *args, **kwargs):
         images_path = os.path.join(self.settings.get('static_path'),'uploads')
         # print(self.settings.get('static_path'))
@@ -33,9 +39,6 @@ class PostHandler(tornado.web.RequestHandler):
     #     self.render('post.html', post_idd=kwargs['post_id'])
     def get(self, post_id):
         self.render('post.html', post_idd=post_id)
-
-
-
 
 class UploadHandler(tornado.web.RequestHandler):
     '''

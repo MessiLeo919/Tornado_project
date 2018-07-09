@@ -1,5 +1,5 @@
 import os.path
-
+import time
 import tornado.ioloop
 import tornado.options
 import tornado.web
@@ -11,6 +11,7 @@ from handlers import auth
 
 define('port', default='8000', help='Listening port', type=int)
 
+
 class Application(tornado.web.Application):
     def __init__(self):
         handlers = [
@@ -19,29 +20,32 @@ class Application(tornado.web.Application):
             ('/post/(?P<post_id>[0-9]+)', main.PostHandler),
             ('/upload', main.UploadHandler),
             ('/login', auth.LoginHandler),
+            ('/logout', auth.LogoutHandler),
+            ('/signup', auth.SignupHandler),
 
         ]
         settings = dict(
             debug=True,
             template_path = os.path.join(os.path.dirname(__file__), 'templates'),
-            static_path = os.path.join(os.path.dirname(__file__),'static'),
+            static_path = os.path.join(os.path.dirname(__file__), 'static'),
             login_url = '/login',
             cookie_secret = 'ajfjowjr343',
             pycket = {
-                'engine':'redis',
-                'storage':{
-                    'host':'localhost',
-                    'port':6379,
-                    'db_sessions':5,
-                    'db_notifications':11,
-                    'max_connections':2**30,
+                'engine': 'redis',
+                'storage': {
+                    'host': 'localhost',
+                    'port': 6379,
+                    'db_sessions': 5,
+                    'db_notifications': 11,
+                    'max_connections': 2**30,
                 },
-                'cookies':{
-                    'expires_days':30,
+                'cookies': {
+                    'expires': time.time() + 180,
                 }
             }
         )
-        super(Application, self).__init__(handlers,**settings)  #**是将字典拆包
+        super(Application, self).__init__(handlers, **settings)  #**是将字典拆包
+
 
 application = Application()
 

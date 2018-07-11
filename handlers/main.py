@@ -3,6 +3,7 @@ import os
 from pycket.session import SessionMixin
 
 from utils import photo
+from utils.account import add_post_for, get_post_for
 
 
 class AuthBaseHandler(tornado.web.RequestHandler,SessionMixin):
@@ -12,28 +13,27 @@ class AuthBaseHandler(tornado.web.RequestHandler,SessionMixin):
 
 class IndexHandler(AuthBaseHandler):
     """
-    Home page for user, photo feeds
+    Home page for user, photo feeds，大图
     """
     @tornado.web.authenticated
     def get(self, *args, **kwargs):
-        # print("**************")
-        images_path = os.path.join(self.settings.get('static_path'), 'uploads')
         # print(self.settings.get('static_path'))
-        images = photo.get_images(images_path)   #改目录下图片文件组成的列表，含路径
+        posts = get_post_for(self.current_user)   #改目录下图片文件组成的列表，含路径
+        image_urls = [p.image_url for p in posts]
         self.render('index.html',
-                    images=images)
+                    images=image_urls)
 
 
-class ExploreHandler(tornado.web.RequestHandler):
+class ExploreHandler(AuthBaseHandler):
     """
-    Explore page, photo of other users.
+    Explore page, photo of other users.缩略图
     """
+    @tornado.web.authenticated
     def get(self, *args, **kwargs):
-        thumbs_path = os.path.join(self.settings.get('static_path'), 'uploads/thumbs')
-        thumbs_images = photo.get_images(thumbs_path)
-        # print("images-----",images)
+        posts = get_post_for(self.current_user)  # 改目录下图片文件组成的列表，含路径
+        thumb_urls = [p.thumb_url for p in posts]
         self.render('explore.html',
-                    thumbsimages=thumbs_images)
+                    thumbsimages=thumb_urls)
 
 
 class PostHandler(tornado.web.RequestHandler):
@@ -46,20 +46,21 @@ class PostHandler(tornado.web.RequestHandler):
         self.render('post.html', post_idd=post_id)
 
 
-class UploadHandler(tornado.web.RequestHandler):
+class UploadHandler(AuthBaseHandler):
     '''
     接收文件上传
     '''
+    @tornado.web.authenticated
     def get(self, *args, **kwargs):
         self.render('upload.html')
 
     def post(self, *args, **kwargs):
         img_files = self.request.files.get('newimg', None)  #得到的是列表
         for img_file in img_files:
-            with open('./static/uploads/' + img_file['filename'], 'wb') as f:
-                f.write(img_file['body'])
-            pic_path = os.path.join(self.settings.get('static_path'), 'uploads/'+img_file['filename'])
-
-            photo.make_thumb(pic_path)
-
-            self.write({'got file': img_file['filename']})
+            saver = photo.ImageSave(self.settings['static_path'],
+                                    img_file['filename'])
+            saver.save_upload(img_file['body'])
+            saver.make_thumb()
+            add_post_for(self.current_user, saver.upload_url, saver.thumb_url)
+            print("save to {}".format(saver.upload_path))
+        self.redirect('/explore')

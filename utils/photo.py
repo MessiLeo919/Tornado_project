@@ -4,20 +4,42 @@ import glob
 from PIL import Image
 
 
-def get_images(path):
-    '''
-    获取路径下的所有JPG图片
-    '''
-    images=[]
-    for file in glob.glob(path+'/*.jpg'):
-        images.append(file)
-    return images
+class ImageSave(object):
+    """
 
-def make_thumb(path):
-    '''
-    获取图片的缩略图，file含路径
-    '''
-    filename, ext = os.path.splitext(os.path.basename(path))
-    im = Image.open(path)
-    im.thumbnail((200,200))
-    im.save("{}_{}x{}.jpg".format('static/uploads/thumbs/'+filename,200,200),"JPEG")
+    """
+    upload_dir = 'uploads'
+    thumb_dir = 'thumbs'
+    size = (200, 200)
+
+    def __init__(self, static_path, name):
+        self.static_path = static_path
+        self.name = name
+
+    @property
+    def upload_url(self):
+        return os.path.join(self.upload_dir, self.name)
+
+    @property
+    def upload_path(self):
+        return os.path.join(self.static_path, self.upload_url)
+
+    def save_upload(self, content):
+        with open(self.upload_path, 'wb') as f:
+            f.write(content)
+
+    @property
+    def thumb_url(self):
+        base, _ = os.path.splitext(self.name)
+        thumb_name = os.path.join('{}_{}x{}.jpg'.
+                                  format(base, self.size[0], self.size[1]))
+        return os.path.join(self.upload_dir, self.thumb_dir, thumb_name)
+
+    def make_thumb(self):
+        im = Image.open(self.upload_path)
+        im.thumbnail(self.size)
+        im.save(os.path.join(self.static_path, self.thumb_url), "JPEG")
+
+
+
+

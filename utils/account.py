@@ -1,6 +1,6 @@
 from datetime import datetime
 import hashlib
-from models.account import User, session
+from models.account import User, session, Post
 
 
 def hash_it(password):
@@ -13,9 +13,9 @@ def authenticate(username, passsword):
             return True
     return False
 
-def login(username):
+def login_time_update(username):
     t = datetime.now()
-    print("user:{} login at {}".format(username, t))
+    # print("user:{} login at {}".format(username, t))
     session.query(User).filter_by(name=username).update({
         User.last_login:t
     })
@@ -26,3 +26,19 @@ def register(username, password, email):
     hash_pass = hash_it(password)
     User.add_user(username, hash_pass, email)
     return {'msg': 'OK'}
+
+def add_post_for(username, image_url, thumb_url):
+    '''
+    保存特定用户的图片
+    '''
+    user = session.query(User).filter_by(name=username).first()
+    post = Post(image_url=image_url, thumb_url=thumb_url,  user=user)
+    session.add(post)
+    session.commit()
+    return post.id
+
+def get_post_for(username):
+    user = session.query(User).filter_by(name=username).first()
+    posts = session.query(Post).filter_by(user=user)
+    return posts
+

@@ -40,7 +40,7 @@ class Application(tornado.web.Application):
                     'max_connections': 2**30,
                 },
                 'cookies': {
-                    'expires': time.time() + 180,
+                    'expires': time.time() + 3600,
                 }
             }
         )

@@ -1,6 +1,6 @@
 import tornado.web
 
-from utils.account import authenticate, register, login
+from utils.account import authenticate, register, login_time_update
 from .main import AuthBaseHandler
 
 
@@ -8,28 +8,30 @@ class LoginHandler(AuthBaseHandler):
     def get(self, *args, **kwargs):
         if self.current_user:
             self.redirect('/')
-        self.render('login.html')
+        next = self.get_argument('next','')
+        self.render('login.html', next = next)
 
     def post(self, *args, **kwargs):
         username = self.get_argument('username', None)
         password = self.get_argument('password', None)
-        print('username', username)
-        print('password', password)
         passed = authenticate(username, password)
 
         if passed:
             self.session.set('bayern_user_info', username)
-            login(username)
-
-            self.redirect('/')
-        # self.write('Login OK!')
+            print('设置cookie成功')
+            login_time_update(username)
+            print("登录成功Hello!", self.get_argument('next', '/'))
+            if self.get_argument('next', '/'):
+                self.redirect(self.get_argument('next', '/'))
+            else:
+                self.redirect('/')
         else:
             self.write('msg:login fail')
 
 
 class LogoutHandler(AuthBaseHandler):
     def get(self, *args, **kwargs):
-        self.session.set('bayern_user_info', '')
+        self.session.delete('bayern_user_info')
         self.redirect('/login')
 
 

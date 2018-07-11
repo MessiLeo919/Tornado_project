@@ -2,10 +2,12 @@
 
 {% block title %}Index page{% end %}
 
-{% block content %}
+{% block content %}Index content Page
 
     {% for img in images %}
-    <img src="{{ img }}" width="600px" height="500px"/>
+{# <!--<img src="{{ static_url('uploads/2.jpg') }}"
+width="600px" height="500px"/>-->#}
+     <img src="{{ static_url(img) }}" class="img-fluid"/>
 
     {% end %}
 

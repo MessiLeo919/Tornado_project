@@ -22,7 +22,6 @@ class Application(tornado.web.Application):
             ('/login', auth.LoginHandler),
             ('/logout', auth.LogoutHandler),
             ('/signup', auth.SignupHandler),
-
         ]
         settings = dict(
             debug=True,
@@ -40,7 +39,7 @@ class Application(tornado.web.Application):
                     'max_connections': 2**30,
                 },
                 'cookies': {
-                    'expires': time.time() + 3600,
+                    'max_age': 600,
                 }
             }
         )

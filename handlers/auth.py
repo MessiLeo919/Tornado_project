@@ -18,16 +18,14 @@ class LoginHandler(AuthBaseHandler):
 
         if passed:
             self.session.set('bayern_user_info', username)
-            print('设置cookie成功')
             login_time_update(username)
-            print("登录成功Hello!", self.get_argument('next', '/'))
+            print("登录成功！设置cookie完成！")
             if self.get_argument('next', '/'):
                 self.redirect(self.get_argument('next', '/'))
             else:
                 self.redirect('/')
         else:
             self.write('msg:login fail')
-
 
 class LogoutHandler(AuthBaseHandler):
     def get(self, *args, **kwargs):

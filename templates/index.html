@@ -2,14 +2,17 @@
 
 {% block title %}Index page{% end %}
 
-{% block content %}Index content Page
+{% block content %} Index content Page
+<br>
 
     {% for img in images %}
 {# <!--<img src="{{ static_url('uploads/2.jpg') }}"
 width="600px" height="500px"/>-->#}
-     <img src="{{ static_url(img) }}" class="img-fluid"/>
 
+        <figure class="figure">
+          <img src="{{ static_url(img) }}" class="figure-img img-fluid rounded"
+               style="height: 500px; width: 600px; margin: auto" alt="A generic square placeholder image with rounded corners in a figure.">
+          <figcaption class="figure-caption">Upload by user.</figcaption>
+        </figure>
     {% end %}
-
-
 {% end %}

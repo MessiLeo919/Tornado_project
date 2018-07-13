@@ -2,17 +2,39 @@
 
 {% block title %}Index page{% end %}
 
-{% block content %} Index content Page
-<br>
-
-    {% for img in images %}
-{# <!--<img src="{{ static_url('uploads/2.jpg') }}"
+{% block content %}
+<h2>关注用户最新动态</h2>
+<h5>最新上传的图片列表</h5>
+    <div class="container">
+      <div class="row">
+        <div class="col-1 col-sm-1" style="background: #ededed">
+        </div>
+        <div class="col-5 col-sm-7" style="background: #c3deff">
+            {% for p in posts %}
+            {# <!--<img src="{{ static_url('uploads/2.jpg') }}"
 width="600px" height="500px"/>-->#}
+                <figure class="figure">
+                    <a href="/post/{{p.id}}">
+                        <img src="{{ static_url(p.image_url) }}" class="figure-img img-fluid rounded"
+                             style="height: 500px; width: 600px; margin: auto" alt="A generic square placeholder image with rounded corners in a figure.">
+                    </a>
+                    <figcaption class="figure-caption">Upload by {{p.user.name}}.</figcaption>
+                </figure>
+            {% end %}
+        </div>
+          <div class="col-5 col-sm-4">
+              <div class="card" style="width: 18rem;">
 
-        <figure class="figure">
-          <img src="{{ static_url(img) }}" class="figure-img img-fluid rounded"
-               style="height: 500px; width: 600px; margin: auto" alt="A generic square placeholder image with rounded corners in a figure.">
-          <figcaption class="figure-caption">Upload by user.</figcaption>
-        </figure>
-    {% end %}
+          <img class="card-img-top" src="{{ static_url(p.image_url) }}" alt="Card image cap">
+          <div class="card-body">
+            <h5 class="card-title">Card title</h5>
+            <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+            <a href="#" class="btn btn-primary">Go somewhere</a>
+          </div>
+        </div>
+          </div>
+
+      </div>
+    </div>
+
 {% end %}

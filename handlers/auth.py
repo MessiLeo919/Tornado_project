@@ -8,7 +8,7 @@ class LoginHandler(AuthBaseHandler):
     def get(self, *args, **kwargs):
         if self.current_user:
             self.redirect('/')
-        next = self.get_argument('next','')
+        next = self.get_argument('next', '')
         self.render('login.html', next = next)
 
     def post(self, *args, **kwargs):
@@ -27,6 +27,7 @@ class LoginHandler(AuthBaseHandler):
         else:
             self.write('msg:login fail')
 
+
 class LogoutHandler(AuthBaseHandler):
     def get(self, *args, **kwargs):
         self.session.delete('bayern_user_info')
@@ -36,7 +37,7 @@ class LogoutHandler(AuthBaseHandler):
 class SignupHandler(AuthBaseHandler):
 
     def get(self, *args, **kwargs):
-        self.render('signup.html', msg = '')
+        self.render('signup.html', msg= '')
 
     def post(self, *args, **kwargs):
         username = self.get_argument('username', '')
@@ -56,4 +57,4 @@ class SignupHandler(AuthBaseHandler):
                 else:
                     self.write(ret)
         else:
-            self.render('signup.html', msg = {'register' : 'fail'})
+            self.render('signup.html', msg = {'register': 'fail'})

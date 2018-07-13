@@ -31,6 +31,7 @@ class User(Base):
                     email=email, last_login=datetime.now())
         session.add(user)
         session.commit()
+
     @classmethod
     def get_pass(cls, name):
         user = session.query(cls).filter_by(name=name).first()
@@ -49,7 +50,7 @@ class Post(Base):
     id = Column(Integer, primary_key=True, autoincrement=True)
     image_url = Column(String(80))
     thumb_url = Column(String(80))
-
+    created = Column(DateTime, default=datetime.now())
     user_id = Column(Integer, ForeignKey('users.id'))
     user = relationship('User', backref = 'posts', uselist = False,
                         cascade = 'all')

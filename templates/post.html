@@ -1,7 +1,18 @@
 {% extends base.html %}
 
-{% block title %}List Post page{% end %}
+{% block title %}  post page  {% end %}
 
-{% block content %}
-post page -----{{post_idd}} content
+{% block content %}<h2>List Post page</h2>
+<div class="container">
+    <div class="row align-content-center">
+        <div class="col"></div>
+        <div class="col-12 col-sm-10">
+            <img src="{{static_url(post.image_url)}}" alt="">
+           <h3>{{post.user.name}}  {{post.created}}</h3>
+        </div>
+        <div class="col"></div>
+    </div>
+</div>
+
+
 {% end %}

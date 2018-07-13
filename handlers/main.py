@@ -3,7 +3,7 @@ import os
 from pycket.session import SessionMixin
 
 from utils import photo
-from utils.account import add_post_for, get_post_for
+from utils.account import add_post_for, get_post_for, get_post, get_all_posts
 
 
 class AuthBaseHandler(tornado.web.RequestHandler, SessionMixin):
@@ -19,9 +19,8 @@ class IndexHandler(AuthBaseHandler):
     def get(self, *args, **kwargs):
         # print(self.settings.get('static_path'))
         posts = get_post_for(self.current_user)   # 改目录下图片文件组成的列表，含路径
-        image_urls = [p.image_url for p in posts]
         self.render('index.html',
-                    images=image_urls)
+                    posts=posts)
 
 
 class ExploreHandler(AuthBaseHandler):
@@ -30,18 +29,17 @@ class ExploreHandler(AuthBaseHandler):
     """
     @tornado.web.authenticated
     def get(self, *args, **kwargs):
-        posts = get_post_for(self.current_user)  # 改目录下图片文件组成的列表，含路径
-        thumb_urls = [p.thumb_url for p in posts]
-        self.render('explore.html',
-                    thumbsimages=thumb_urls)
+        posts = get_all_posts()
+        self.render('explore.html', posts=posts)
 
 
-class PostHandler(tornado.web.RequestHandler):
+class PostHandler(AuthBaseHandler):
     """
     Single photo page, and maybe comments.
     """
     def get(self, post_id):
-        self.render('post.html', post_idd=post_id)
+        post = get_post(int(post_id))
+        self.render('post.html', post=post)
 
 
 class UploadHandler(AuthBaseHandler):
@@ -61,4 +59,4 @@ class UploadHandler(AuthBaseHandler):
             saver.make_thumb()
             add_post_for(self.current_user, saver.upload_url, saver.thumb_url)
             print("save to {}".format(saver.upload_path))
-        self.redirect('/explore')
+        self.redirect('/')

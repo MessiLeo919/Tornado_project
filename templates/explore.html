@@ -3,13 +3,14 @@
 {% block title %}Explore page{% end %}
 
 
-{% block content %}Explore content Page
-<br>
-
-    {% for img in thumbsimages %}
-    <img src="{{ static_url(img) }}" class="figure-img img-thumbnail" alt="Responsive image"/>
-
-    {% end %}
-
-
+{% block content %} <h2>Explore content Page</h2>
+    <div class="row justify-content-center">
+        <div class="col col-sm-10">
+            {% for p in posts %}
+            <a href="/post/{{p.id}}">
+            <img class="img-thumbnail" src="{{ static_url(p.thumb_url) }}" class="figure-img img-thumbnail" alt="Responsive image"/>
+            </a>
+            {% end %}
+        </div>
+    </div>
 {%  end %}
